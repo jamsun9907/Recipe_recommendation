@@ -2,25 +2,39 @@
 
 from Recipe_scrape_url import get_total_recipe_list
 from Recipe_scrape_class import recipe_10000, recipe_finder
-from Recipe_store import on_mongoDB
+from Recipe_store import save_on_mongoDB
+
+import time
+start = time.time()  # 시작 시간 저장
 
 
 # 1000page까지 가보자
-for i in range(1,2):
-    print(f'{i}번째 페이지 스크래핑 중...\n')
+# 현재까지 0페이지 완료 50페이지까지 진행중
+for i in range(1,51):
+    print(f'Scraping {i}th page...\n')
+    
     recipe_list = get_total_recipe_list(page_num = i) # 
+    print(f'Status : recipe list are collected from the page')
 
+    cnt = 0
     for recipe in recipe_list:
         try:
-            recipe_info = recipe_finder(recipe)
-            on_mongoDB(recipe_info)
+            recipe_info = recipe_finder(recipe, flag = True)
+            save_on_mongoDB(recipe_info)
+            print(f'Status : {recipe_info["recipe_name"]} Done')  # status 확인/
+            cnt += 1
         except:
-            print(f'\n-----------------------\nError! Sth wrong happened in recipe_code : {recipe}')
-            pass
+            print(f'-----------------------\nError! Sth wrong happened in recipe_code : {recipe}') # 보통 에러 발생하는건 response 문제이다
+            pass 
             
     print(f"""
-Result:
-{i}번째 페이지 스크래핑 완료
-MongoDB 예상 적재 데이터 : {40 * i}개
+    Result:
+    Scraping done : {i}th page
+    # of stored data on MongoDB : {cnt}
     --------------------------------------
-    """)
+        """)
+
+print(f"""
+All processes are done
+time : {time.time() - start}
+""")

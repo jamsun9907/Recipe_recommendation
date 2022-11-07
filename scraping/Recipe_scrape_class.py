@@ -1,6 +1,7 @@
 # 파일명 : Recipe_scrape_class.py
 
-import requests
+import time
+from requests import get
 from bs4 import BeautifulSoup
 import numpy as np
 
@@ -75,7 +76,6 @@ class recipe_10000():
 
         except:
             return np.nan
-
 
 def recipe_finder(recipe_code, flag = False):
     """
