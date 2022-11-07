@@ -9,8 +9,8 @@ start = time.time()  # 시작 시간 저장
 
 
 # 1000page까지 가보자
-# 현재까지 0페이지 완료 50페이지까지 진행중
-for i in range(1,51):
+# 현재까지 50페이지 완료 200페이지까지 진행중
+for i in range(51, 201):
     print(f'Scraping {i}th page...\n')
     
     recipe_list = get_total_recipe_list(page_num = i) # 
