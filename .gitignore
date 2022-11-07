@@ -1,3 +1,5 @@
 scraping/
 flask_app/__pycache__/
+loading/config.py
 README.md
+config.py
