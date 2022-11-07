@@ -1,4 +1,4 @@
-scraping/
+scraping/config
 flask_app/__pycache__/
 loading/config.py
 config.py

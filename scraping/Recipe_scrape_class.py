@@ -93,6 +93,7 @@ def recipe_finder(recipe_code, flag = False):
 
     recipe_info['recipe_name'] = recipe_page.recipe_name()
     recipe_info['hit_num'] = recipe_page.hit_num()
+    recipe_info['cooking_time'] = recipe_page.cooking_time()
     recipe_info['serves'] = recipe_page.serves()
     recipe_info['difficulty'] = recipe_page.difficulty()
     recipe_info['url'] = recipe_page.url

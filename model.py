@@ -3,7 +3,7 @@ from pymongo import MongoClient
 import pandas as pd
 import pickle
 import os
-import boto.s3.connection import S3Connection
+import config
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -16,9 +16,12 @@ class get_recipe:
         MongoDB에 있는 모든 레시피를 불러와 리스트 형태로 반환한다.
         """
         # 커넥션 접속 작업
-        HOST = os.getenv('HOST')
-        USER = os.getenv('USER')
-        PASSWORD = os.getenv('PASSWORD')
+        HOST = config.HOST
+        USER = config.USER
+        PASSWORD = config.PASSWORD
+        # HOST = os.getenv('HOST')
+        # USER = os.getenv('USER')
+        # PASSWORD = os.getenv('PASSWORD')
         DATABASE_NAME = 'recipe_DB'
         COLLECTION_NAME = 'recipe_info_v3'
         MONGO_URI = f"mongodb+srv://{USER}:{PASSWORD}@{HOST}/{DATABASE_NAME}?retryWrites=true&w=majority"
@@ -43,7 +46,7 @@ class get_recipe:
         'Hit_num':[],
         'Serves':[],
         'Cooking_time':[],
-        'Level':[],
+        'Difficulty':[],
         'Url':[],
         'Ingredients':[]})
 
@@ -58,12 +61,14 @@ class get_recipe:
                 data_list[row]['hit_num'],
                 data_list[row]['serves'],
                 data_list[row]['cooking_time'], 
-                data_list[row]['level'],
+                data_list[row]['difficulty'],
                 data_list[row]['url'], 
                 ingredients]
         
-        # 중복 제거 및 재정렬
+        # 결측값 제거 중복 제거 및 재정렬
         df.drop_duplicates(subset='Url', inplace = True)
+        df.dropna(inplace=True)
+        # print(df.isna().sum().sum())
         df.reset_index(inplace = True, drop = True)
 
         # 컬럼 형식 맞추기
@@ -71,7 +76,6 @@ class get_recipe:
         df['Serves'] = df['Serves'].str.extract(r'(\d+)').astype(int)
         df['Cooking_time'] = df['Cooking_time'].str.replace('2시간','120').str.extract(r'(\d+)').astype(int)
 
-        
         return df
 
 
@@ -104,7 +108,6 @@ class recommendation_model:
         """
         데이터프레임의 Cosine similarity를 계산하여 추가한다.
         """
-
         # 데이터 프레임 복사
         df_recipe = df.copy()
 
@@ -140,10 +143,15 @@ class recommendation_model:
 
 # pickling
 recipe_class = get_recipe()
-recipe = recipe_class.just_get
+recipe = recipe_class.just_get()
 with open('recipe.pkl','wb') as f:
     pickle.dump(recipe, f)
 
 model = recommendation_model()
 with open('model.pkl','wb') as f:
     pickle.dump(model, f)
+
+with open(r"C:\Users\Sunyoung_Jang\Documents\My_project\2022\Recipe_recommendation\recipe.pkl","rb") as fr:
+    recipe = pickle.load(fr)
+
+# print(type(recipe),recipe)
