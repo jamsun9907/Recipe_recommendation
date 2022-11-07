@@ -3,7 +3,7 @@ from pymongo import MongoClient
 import pandas as pd
 import pickle
 import os
-import config
+# import config
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -16,12 +16,12 @@ class get_recipe:
         MongoDB에 있는 모든 레시피를 불러와 리스트 형태로 반환한다.
         """
         # 커넥션 접속 작업
-        HOST = config.HOST
-        USER = config.USER
-        PASSWORD = config.PASSWORD
-        # HOST = os.getenv('HOST')
-        # USER = os.getenv('USER')
-        # PASSWORD = os.getenv('PASSWORD')
+        # HOST = config.HOST
+        # USER = config.USER
+        # PASSWORD = config.PASSWORD
+        HOST = os.getenv('HOST')
+        USER = os.getenv('USER')
+        PASSWORD = os.getenv('PASSWORD')
         DATABASE_NAME = 'recipe_DB'
         COLLECTION_NAME = 'recipe_info_v3'
         MONGO_URI = f"mongodb+srv://{USER}:{PASSWORD}@{HOST}/{DATABASE_NAME}?retryWrites=true&w=majority"
