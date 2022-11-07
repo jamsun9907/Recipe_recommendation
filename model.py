@@ -2,6 +2,7 @@ from itertools import chain
 from pymongo import MongoClient
 import pandas as pd
 import pickle
+import os
 import boto.s3.connection import S3Connection
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
