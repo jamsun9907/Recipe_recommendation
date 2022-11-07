@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>자취생의 레시피</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+
+	</head>
+	<body class="is-preload">
+
+		<!-- Header -->
+			<header id="header">
+				<h1>자취생의 냉장고.v1</h1>
+				<p>냉장고에 남은 재료를 아래에 입력해보세요!<br/>
+				레시피를 10개 추천해드립니다 :) <a href="http://localhost:5000">이 사이트는 왜 만들었나요?</a></p>
+			</header>
+
+		<!-- Ingredients Form -->
+			<form id="signup-form" method="post" action="/">
+				<input type="text" name="time" id="Ingredients" placeholder="몇 분 이내로?" />
+				<input type="text" name="ingre" id="Ingredients" placeholder="Ingredients" />
+				<br>
+				<input type="submit" value="Give me recipes!" />
+			</form>
+
+		<!-- Body -->
+			<body>
+				<p>레시피 목록 구성이 궁금해요! <a href="/dashboard" class="button-2">Dashboard 구경하기</a><p>
+				{% if recipes %}
+				<p class="print"><h3><b>추천 레시피</b></h3>
+				<ol class="a">
+				{% for row in recipes %}
+					<li>{{ row[0] }}<br><a href={{ row[1] }}>{{ row[1] }}</a></li></li>
+				{% endfor %}
+				</ol>
+				</p>
+				{% endif %}
+			</body>
+
+		<!-- Footer -->
+			<footer id="footer">
+				<ul class="icons">
+					<!-- <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+					<li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li> -->
+				</ul>
+				<ul class="copyright">
+					<li>&copy; Untitled.</li><li>Credits: <a href="http://html5up.net">HTML5 UP</a></li>
+				</ul>
+			</footer>
+
+		<!-- Scripts -->
+			<!-- <script src="static/main.js"></script> -->
+
+	</body>
+</html>
