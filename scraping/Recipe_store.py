@@ -5,9 +5,9 @@ def save_on_mongoDB(recipe_info):
     """
     힘들게 구한 레시피 info를 mongoDB에 일단 저장
     """
-    HOST = 'cluster0.1lslter.mongodb.net'
-    USER = 'Sunyoung'
-    PASSWORD = 'sun123'
+    HOST = NONE
+    USER = NONE
+    PASSWORD = NONE
     DATABASE_NAME = 'recipe_DB'
     COLLECTION_NAME = 'recipe_info_v3'
     MONGO_URI = f"mongodb+srv://{USER}:{PASSWORD}@{HOST}/{DATABASE_NAME}?retryWrites=true&w=majority"
