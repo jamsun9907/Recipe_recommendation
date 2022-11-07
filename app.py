@@ -2,7 +2,6 @@ from flask import Flask, request, render_template
 import pickle
 import os
 import pandas as pd
-import config
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
