@@ -151,7 +151,7 @@ model = recommendation_model()
 with open('model.pkl','wb') as f:
     pickle.dump(model, f)
 
-with open(r"C:\Users\Sunyoung_Jang\Documents\My_project\2022\Recipe_recommendation\recipe.pkl","rb") as fr:
-    recipe = pickle.load(fr)
+# with open(r"C:\Users\Sunyoung_Jang\Documents\My_project\2022\Recipe_recommendation\recipe.pkl","rb") as fr:
+#     recipe = pickle.load(fr)
 
 # print(type(recipe),recipe)
