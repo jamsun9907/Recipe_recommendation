@@ -9,7 +9,7 @@ start = time.time()  # 시작 시간 저장
 
 
 # 1000page까지 가보자
-# 현재까지 40페이지 완료 200페이지까지 진행중
+# 현재까지 200페이지까지 완료 
 for i in range(1, 201):
     print(f'Scraping {i}th page...\n')
     

@@ -3,9 +3,9 @@ from pymongo import MongoClient
 import pandas as pd
 import pickle
 import os
-import config
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+# import config
 
 class get_recipe:
     '레시피 데이터를 불러온다.'
@@ -15,12 +15,12 @@ class get_recipe:
         MongoDB에 있는 모든 레시피를 불러와 리스트 형태로 반환한다.
         """
         # 커넥션 접속 작업
-        HOST = config.HOST
-        USER = config.USER
-        PASSWORD = config.PASSWORD
-        # HOST = os.getenv('HOST')
-        # USER = os.getenv('USER')
-        # PASSWORD = os.getenv('PASSWORD')
+        # HOST = config.HOST
+        # USER = config.USER
+        # PASSWORD = config.PASSWORD
+        HOST = os.getenv('HOST')
+        USER = os.getenv('USER')
+        PASSWORD = os.getenv('PASSWORD')
         DATABASE_NAME = 'recipe_DB'
         COLLECTION_NAME = 'recipe_info_v3'
         MONGO_URI = f"mongodb+srv://{USER}:{PASSWORD}@{HOST}/{DATABASE_NAME}?retryWrites=true&w=majority"
@@ -166,14 +166,8 @@ class recommendation_model:
 # pickling
 recipe_class = get_recipe()
 recipes = recipe_class.just_get()
-# with open('recipe.pkl','wb') as f:
-#     pickle.dump(recipe, f)
 
 model = recommendation_model(recipes)
+
 with open('model.pkl','wb') as f:
     pickle.dump(model, f)
-
-# with open(r"C:\Users\Sunyoung_Jang\Documents\My_project\2022\Recipe_recommendation\recipe.pkl","rb") as fr:
-#     recipe = pickle.load(fr)
-
-# print(type(recipe),recipe)
