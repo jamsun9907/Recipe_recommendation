@@ -3,7 +3,7 @@
 	<head>
 		<title>자취생의 레시피</title>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<!-- <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" /> -->
 		<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 
 	</head>
@@ -13,7 +13,7 @@
 			<header id="header">
 				<h1>자취생의 냉장고.v1</h1>
 				<p>냉장고에 남은 재료를 아래에 입력해보세요!<br/>
-				레시피를 10개 추천해드립니다 :) <a href="http://localhost:5000">이 사이트는 왜 만들었나요?</a></p>
+				레시피를 10개 추천해드립니다 :) <a href="https://iwannatakeabreakfromschool.tistory.com/15">이 사이트는 왜 만들었나요?</a></p>
 			</header>
 
 		<!-- Ingredients Form -->
@@ -28,7 +28,8 @@
 			<body>
 				<p>레시피 목록 구성이 궁금해요! <a href="/dashboard" class="button-2">Dashboard 구경하기</a><p>
 				{% if recipes %}
-				<p class="print"><h3><b>추천 레시피</b></h3>
+				<h2 class="print"><b>{{ cooking_time }}분 이내 가능한 추천 레시피!</b></h2>
+				<p>입력하신 {{ my_ingredients }} 재료를 기반으로 추천합니다 :)</p>
 				<ol class="a">
 				{% for row in recipes %}
 					<li>{{ row[0] }}<br><a href={{ row[1] }}>{{ row[1] }}</a></li></li>

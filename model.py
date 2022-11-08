@@ -3,7 +3,7 @@ from pymongo import MongoClient
 import pandas as pd
 import pickle
 import os
-# import config
+import config
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -15,12 +15,12 @@ class get_recipe:
         MongoDB에 있는 모든 레시피를 불러와 리스트 형태로 반환한다.
         """
         # 커넥션 접속 작업
-        # HOST = config.HOST
-        # USER = config.USER
-        # PASSWORD = config.PASSWORD
-        HOST = os.getenv('HOST')
-        USER = os.getenv('USER')
-        PASSWORD = os.getenv('PASSWORD')
+        HOST = config.HOST
+        USER = config.USER
+        PASSWORD = config.PASSWORD
+        # HOST = os.getenv('HOST')
+        # USER = os.getenv('USER')
+        # PASSWORD = os.getenv('PASSWORD')
         DATABASE_NAME = 'recipe_DB'
         COLLECTION_NAME = 'recipe_info_v3'
         MONGO_URI = f"mongodb+srv://{USER}:{PASSWORD}@{HOST}/{DATABASE_NAME}?retryWrites=true&w=majority"
@@ -101,21 +101,36 @@ class get_recipe:
 
 
 class recommendation_model:
+    """
+    Input
+    df : DB에 저장된 레시피(df형태)
+    my_ingredients_list : 입력 안하면 '물, 쌀, 밥, 소금, 식용유, 김치'
+    cooking_time : 입력 안하면 최대치
 
-    def __init__(self):
-        self.df_recipe = None
+    attribute 
+    recipes : fit이 완료된 레시피를 반환한다. 
+    my_ingredients_list : 입력한 레시피 리스트를 반환한다.
+    """
 
+    def __init__(self, df):
+        self.recipes = None
+        self.df = df
+        self.my_ingredients_list = None
+        self.cooking_time = None
     # 얘가 사실상 모델에 가장 가깝지 않을까...
 
-    def fit(self, df, my_ingredients_list):
+    def fit(self, my_ingredients_list='물, 쌀, 밥, 소금, 식용유, 김치', cooking_time = 1000):
         """
-        데이터프레임의 Cosine similarity를 계산하여 추가한다.
+        my_ingredients_list, cooking_time을 입력하면 
+        데이터프레임의 Cosine similarity를 계산하여 학습한다.
         """
-        # 데이터 프레임 복사
-        df_recipe = df.copy()
+        # 레시피 복사
+        df_recipe = self.df.copy()
+        self.my_ingredients_list = my_ingredients_list
+        self.cooking_time = cooking_time
 
         # Embedding
-        my_ingredients = [my_ingredients_list]
+        my_ingredients = [self.my_ingredients_list]
         recipe_ingre_list = list(df_recipe['Ingredients'])
 
         doc_list = my_ingredients + recipe_ingre_list
@@ -127,30 +142,34 @@ class recommendation_model:
         similarity = cosine_similarity(ingredients_mat[0], ingredients_mat[1:]) # 내 재료, 레시피 재료
         df_recipe['similarity'] = similarity.reshape(-1)
 
-        self.df_recipe = df_recipe
+        self.recipes = df_recipe
         
-        return self.df_recipe
+        return None
 
-    def find_sim_recipe(self, cooking_time = 180):
+    def find_sim_recipe(self):
         """
         내가 가진 재료와 비슷한 레시피를 반환한다.
+        레시피에 중복이 있을 경우 더 조회수가 높은 레시피를 반환한다.
         """
         
         # Contents based recommendation    
-        result = self.df_recipe.sort_values(by = 'similarity', ascending = False)
+        result = self.recipes.sort_values(by = 'similarity', ascending = False)
 
         ## 사용자 희망 조리시간에 맞게 결과 반환
-        recommandation = result[result['Cooking_time'] <= cooking_time].head(10)
+        recommandation = result[result['Cooking_time'] <= self.cooking_time].head(20)
+
+        # 중복 레시피는 조회수 높은 것으로 필터링
+        recommandation = recommandation.sort_values(by = 'Hit_num', ascending = False).drop_duplicates(subset = 'Recipe_name', keep = 'first').head(10)
 
         return recommandation
 
 # pickling
 recipe_class = get_recipe()
-recipe = recipe_class.just_get()
-with open('recipe.pkl','wb') as f:
-    pickle.dump(recipe, f)
+recipes = recipe_class.just_get()
+# with open('recipe.pkl','wb') as f:
+#     pickle.dump(recipe, f)
 
-model = recommendation_model()
+model = recommendation_model(recipes)
 with open('model.pkl','wb') as f:
     pickle.dump(model, f)
 
