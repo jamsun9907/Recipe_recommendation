@@ -1,4 +1,8 @@
 # 정제된 레시피 목록을 localDB에 저장한다.
+
+import config
+import pymysql
+
 def get_connection():
 
     HOST = config.HOST_sql

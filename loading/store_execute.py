@@ -2,7 +2,7 @@
 
 from store_sql import get_connection, init_table, df_to_sql
 from preprocessing import simple_processing
-
+from load_mongo import load_Mongo_recipe
 
 # MongoDB 데이터 불러오기 
 data_list = load_Mongo_recipe()

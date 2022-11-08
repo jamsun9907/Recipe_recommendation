@@ -7,7 +7,6 @@ import os
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-
 class get_recipe:
     '레시피 데이터를 불러온다.'
 
@@ -51,19 +50,23 @@ class get_recipe:
         'Ingredients':[]})
 
         for row in range(len(data_list)):
-            # 재료의 더블 리스트롤 풀어준다
-            dict_val = data_list[row]['ingredients'].values()
-            ingredients = ','.join(s for s in list(chain(*dict_val))) # 리스트를 텍스트로 변환
+            try:
+                # 재료의 더블 리스트롤 풀어준다
+                dict_val = data_list[row]['ingredients'].values()
+                ingredients = ','.join(s for s in list(chain(*dict_val))) # 리스트를 텍스트로 변환
 
-            # 데이터 프레임에 추가 (id, name, url, ingredient 순서)
-            df.loc[row] = [
-                data_list[row]['recipe_name'], 
-                data_list[row]['hit_num'],
-                data_list[row]['serves'],
-                data_list[row]['cooking_time'], 
-                data_list[row]['difficulty'],
-                data_list[row]['url'], 
-                ingredients]
+                # 데이터 프레임에 추가 (id, name, url, ingredient 순서)
+                df.loc[row] = [
+                    data_list[row]['recipe_name'], 
+                    data_list[row]['hit_num'],
+                    data_list[row]['serves'],
+                    data_list[row]['cooking_time'], 
+                    data_list[row]['difficulty'],
+                    data_list[row]['url'], 
+                    ingredients]
+            except: 
+                pass 
+                # print(data_list[row], type(data_list[row]['ingredients'])) # 재료를 입력 안한 경우. 무시하면 될 듯
         
         # 결측값 제거 중복 제거 및 재정렬
         df.drop_duplicates(subset='Url', inplace = True)

@@ -1,30 +1,6 @@
 from itertools import chain
-from pymongo import MongoClient
-import pymysql
 import pandas as pd
 import numpy as np
-import config
-
-def load_Mongo_recipe():
-    """
-    MongoDB에 있는 모든 레시피를 불러와 리스트 형태로 반환한다.
-    """
-    # 커넥션 접속 작업
-    HOST = config.HOST
-    USER = config.USER
-    PASSWORD = config.PASSWORD
-    DATABASE_NAME = 'recipe_DB'
-    COLLECTION_NAME = 'recipe_info_v3'
-    MONGO_URI = f"mongodb+srv://{USER}:{PASSWORD}@{HOST}/{DATABASE_NAME}?retryWrites=true&w=majority"
-
-    client = MongoClient(MONGO_URI) 
-    db = client[DATABASE_NAME] # Connection
-    collection = db[COLLECTION_NAME] # Creating table
-
-    ## MongoDB 에서 데이터 불러오기
-    data_list = [i for i in collection.find()]
-
-    return data_list
 
 
 def list_to_dataframe(data_list):
@@ -43,19 +19,21 @@ def list_to_dataframe(data_list):
     'Ingredients':[]})
 
     for row in range(len(data_list)):
-        # 재료의 더블 리스트롤 풀어준다
-        dict_val = data_list[row]['ingredients'].values()
-        ingredients = ','.join(s for s in list(chain(*dict_val))) # 리스트를 텍스트로 변환
+        try:
+            # 재료의 더블 리스트롤 풀어준다
+            dict_val = data_list[row]['ingredients'].values()
+            ingredients = ','.join(s for s in list(chain(*dict_val))) # 리스트를 텍스트로 변환
 
-        # 데이터 프레임에 추가 (id, name, url, ingredient 순서)
-        df.loc[row] = [
-            data_list[row]['recipe_name'], 
-            data_list[row]['hit_num'],
-            data_list[row]['serves'],
-            data_list[row]['cooking_time'], 
-            data_list[row]['difficulty'],
-            data_list[row]['url'], 
-            ingredients]
+            # 데이터 프레임에 추가 (id, name, url, ingredient 순서)
+            df.loc[row] = [
+                data_list[row]['recipe_name'], 
+                data_list[row]['hit_num'],
+                data_list[row]['serves'],
+                data_list[row]['cooking_time'], 
+                data_list[row]['difficulty'],
+                data_list[row]['url'], 
+                ingredients]
+        except: pass #print(data_list[row], type(data_list[row]['ingredients'])) # 재료를 입력 안한 경우. 무시하면 될 듯
 
     return df
 
@@ -66,8 +44,9 @@ def preprocessing(df):
     """
     df_clean = df.copy()
 
-    # 중복 제거 및 재정렬
+    # na 제거, 중복 제거 및 재정렬
     df_clean = df.copy()
+    df_clean.dropna(inplace=True)
     df_clean.drop_duplicates(subset='Url', inplace = True)
     df_clean.reset_index(inplace = True, drop = True)
 
