@@ -25,7 +25,6 @@
 ![image](https://user-images.githubusercontent.com/83063287/216822166-67744739-7b01-4dd3-961b-b3bdeb1969d3.png)
 ![image](https://user-images.githubusercontent.com/83063287/216822171-14ce7a90-44fb-44df-adc0-21fcad7c17d1.png)
 ![image](https://user-images.githubusercontent.com/83063287/216822173-97065aef-5605-41b9-8d4b-6aaf1952146c.png)
-![image](https://user-images.githubusercontent.com/83063287/216822175-83531f41-5977-4038-b911-d4f3abbce7ee.png)
 
 ### 2.2 학습 데이터
 * 만개의 레시피 스크레핑(직접 진행)
